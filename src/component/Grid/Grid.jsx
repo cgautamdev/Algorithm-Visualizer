@@ -9,6 +9,7 @@ const Grid = ({
    end_node,
    visitedNodes,
    shortestPath,
+   activeNode,
 }) => {
    return (
       // default grid
@@ -27,6 +28,12 @@ const Grid = ({
                shortestPath.some((node) => node.row === row && node.col === col)
             ) {
                type = NODE_TYPES.SHORTEST_PATH;
+            } else if (
+               activeNode &&
+               activeNode.row === row &&
+               activeNode.col === col
+            ) {
+               type = NODE_TYPES.ACTIVE;
             } else if (
                visitedNodes.some((node) => node.row === row && node.col === col)
             ) {

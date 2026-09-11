@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import "./Controls.css";
 import bfs from "../../algorithms/bfs";
+import dfs from "../../algorithms/dfs";
 
 const Controls = ({
    rows,
@@ -9,11 +10,13 @@ const Controls = ({
    end_node,
    setVisitedNodes,
    setShortestPath,
+   setActiveNode,
    setCols,
 }) => {
    const [algorithm, setAlgorithm] = useState("bfs");
    const [speed, setSpeed] = useState(100);
    const timersRef = useRef([]);
+   const [isLocked, setIsLocked] = useState(false);
 
    const clearAnimation = () => {
       timersRef.current.forEach((timer) => {
@@ -21,36 +24,54 @@ const Controls = ({
       });
 
       timersRef.current = [];
+
       setVisitedNodes([]);
       setShortestPath([]);
+      setActiveNode(null);
    };
 
    const handleClear = () => {
       clearAnimation();
+      setIsLocked(false);
    };
 
    const handleVisualise = () => {
       clearAnimation();
+      setIsLocked(true);
 
       let visitOrder, shortestPath;
 
       if (algorithm === "bfs") {
          ({ visitOrder, shortestPath } = bfs(rows, cols, start_node, end_node));
+      } else if (algorithm === "dfs") {
+         ({ visitOrder, shortestPath } = dfs(rows, cols, start_node, end_node));
       }
 
+      // Animate visited nodes
       visitOrder.forEach((node, index) => {
          const timer = setTimeout(() => {
+            setActiveNode(node);
             setVisitedNodes((prev) => [...prev, node]);
          }, index * speed);
 
          timersRef.current.push(timer);
       });
 
-      const pathTimer = setTimeout(() => {
-         setShortestPath(shortestPath);
-      }, visitOrder.length * speed);
+      // animating active node
+      const pathStartTime = visitOrder.length * speed;
 
-      timersRef.current.push(pathTimer);
+      shortestPath.forEach((node, index) => {
+         const timer = setTimeout(
+            () => {
+               setActiveNode(null);
+
+               setShortestPath((prev) => [...prev, node]);
+            },
+            pathStartTime + index * speed,
+         );
+
+         timersRef.current.push(timer);
+      });
    };
 
    return (
@@ -95,6 +116,7 @@ const Controls = ({
                min="20"
                max="50"
                value={cols}
+               disabled={isLocked}
                onChange={(e) => setCols(Number(e.target.value))}
             />
          </div>

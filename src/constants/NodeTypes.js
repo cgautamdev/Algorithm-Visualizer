@@ -1,9 +1,9 @@
 export const NODE_TYPES = {
    UNVISITED: "unvisited",
-   VISITED: "visited",
    START: "start",
    END: "end",
    WALL: "wall",
-   PATH: "path",
+   VISITED: "visited",
    SHORTEST_PATH: "shortest-path",
+   ACTIVE: "active",
 };

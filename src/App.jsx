@@ -15,6 +15,7 @@ const App = () => {
 
    const [visitedNodes, setVisitedNodes] = useState([]);
    const [shortestPath, setShortestPath] = useState([]);
+   const [activeNode, setActiveNode] = useState(null);
    return (
       <>
          <Navbar></Navbar>
@@ -25,6 +26,7 @@ const App = () => {
             end_node={end_node}
             setVisitedNodes={setVisitedNodes}
             setShortestPath={setShortestPath}
+            setActiveNode={setActiveNode}
             setCols={setCols}
          />
 
@@ -35,6 +37,7 @@ const App = () => {
             end_node={end_node}
             visitedNodes={visitedNodes}
             shortestPath={shortestPath}
+            activeNode={activeNode}
          />
          <Footer></Footer>
       </>
