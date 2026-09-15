@@ -1,0 +1,5 @@
+.grid-container {
+   display: grid;
+   grid-template-columns: repeat(var(--grid-cols), 30px);
+   justify-content: center;
+}
