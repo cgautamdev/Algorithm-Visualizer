@@ -1,8 +1,9 @@
 import React from "react";
 import "./Grid.css";
 import Node from "../Node/Node";
+import NodeTypes from "../Node/NodeTypes";
 
-const Grid = ({ rows, cols }) => {
+const Grid = ({ rows, cols, start_node, end_node }) => {
    // ---- Creating the grid
    // node stuff
    const nodes = []; // contains all the nodes
@@ -14,32 +15,35 @@ const Grid = ({ rows, cols }) => {
    }
    // -----
 
-   // nodes - start and end
-   const start_node = { row: 2, col: 2 };
-   const end_node = { row: 8, col: 8 };
-
    return (
       <div className="grid-container" style={{ "--grid-cols": cols }}>
          {nodes.map((singleNode) => {
             const nodeId = `node-${singleNode.row}-${singleNode.col}`;
 
-            const nodeType = "unvisited";
+            // ----- Node type logic
+            let nodeType = "";
+            if (
+               singleNode.row === start_node.row &&
+               singleNode.col === start_node.col
+            ) {
+               nodeType = NodeTypes.START_NODE;
+            } else if (
+               singleNode.row === end_node.row &&
+               singleNode.col === end_node.col
+            ) {
+               nodeType = NodeTypes.END_NODE;
+            } else {
+               nodeType = NodeTypes.UNVISITED;
+            }
+            // ----- Node type logic ends here
 
             return (
                <Node
                   key={nodeId}
                   id={nodeId}
-                  type={nodeType} // by default
+                  type={nodeType}
                   isBottomEdge={singleNode.row === rows - 1}
                   isRightEdge={singleNode.col === cols - 1}
-                  start_node={
-                     singleNode.row === start_node.row &&
-                     singleNode.col === start_node.col
-                  }
-                  end_node={
-                     singleNode.row === end_node.row &&
-                     singleNode.col === end_node.col
-                  }
                />
             );
          })}
